@@ -47,6 +47,10 @@ export default function ServicesPage() {
                 Your audience will walk away with a clear, memorable framework
                 they can apply immediately — not just motivation, but a system.
               </p>
+              <div className="bg-[var(--color-heartbeat-light)] rounded-xl px-5 py-4 mb-8">
+                <p className="text-[var(--color-heartbeat)] font-bold text-lg">Starting at $3,500</p>
+                <p className="text-gray-600 text-sm">Half-day events from $5,250</p>
+              </div>
               <h4 className="font-bold text-gray-900 mb-3">Popular Topics</h4>
               <ul className="space-y-2 mb-8">
                 {[
@@ -144,6 +148,10 @@ export default function ServicesPage() {
                 current pipeline, win/loss patterns, and team capabilities —
                 then we build the playbook together.
               </p>
+              <div className="bg-[var(--color-heartbeat-light)] rounded-xl px-5 py-4 mb-8">
+                <p className="text-[var(--color-heartbeat)] font-bold text-lg">$1,750/month</p>
+                <p className="text-gray-600 text-sm">Quarterly engagements from $10,500</p>
+              </div>
               <h4 className="font-bold text-gray-900 mb-3">What I Help With</h4>
               <ul className="space-y-2 mb-8">
                 {[
@@ -195,6 +203,10 @@ export default function ServicesPage() {
                 veteran looking to break through a plateau, coaching accelerates
                 growth faster than anything else.
               </p>
+              <div className="bg-[var(--color-heartbeat-light)] rounded-xl px-5 py-4 mb-8">
+                <p className="text-[var(--color-heartbeat)] font-bold text-lg">$350/session</p>
+                <p className="text-gray-600 text-sm">Monthly packages from $1,050 (2 sessions/month)</p>
+              </div>
               <h4 className="font-bold text-gray-900 mb-3">
                 What Coaching Looks Like
               </h4>
@@ -294,6 +306,10 @@ export default function ServicesPage() {
                 practice, roleplay, and real-world application so learning
                 sticks.
               </p>
+              <div className="bg-[var(--color-heartbeat-light)] rounded-xl px-5 py-4 mb-8">
+                <p className="text-[var(--color-heartbeat)] font-bold text-lg">From $2,450 per workshop</p>
+                <p className="text-gray-600 text-sm">Multi-week programs from $7,000+</p>
+              </div>
               <h4 className="font-bold text-gray-900 mb-3">Program Options</h4>
               <ul className="space-y-2 mb-8">
                 {[

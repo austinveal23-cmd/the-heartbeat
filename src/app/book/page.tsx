@@ -194,17 +194,42 @@ export default function BookPage() {
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
             Get Your Copy
           </h2>
-          <p className="text-lg text-gray-500 mb-10 max-w-xl mx-auto">
+          <p className="text-lg text-gray-500 mb-12 max-w-xl mx-auto">
             Available now. Transform your approach to sales with the Heartbeat
             framework.
           </p>
-          <div className="inline-flex flex-col sm:flex-row gap-4">
-            <a
-              href="#"
-              className="bg-[var(--color-heartbeat)] text-white font-semibold px-10 py-4 rounded-full hover:bg-[var(--color-heartbeat-dark)] transition-colors text-lg"
-            >
-              Buy Now
-            </a>
+          <div className="inline-flex flex-col sm:flex-row gap-6 mb-4">
+            <div className="border border-gray-200 rounded-2xl px-8 py-6 text-center hover:border-[var(--color-heartbeat)] hover:shadow-lg transition-all">
+              <p className="text-sm text-gray-500 mb-1">Kindle</p>
+              <p className="text-3xl font-bold text-gray-900">$6.99</p>
+              <a
+                href="#"
+                className="mt-4 inline-block bg-[var(--color-heartbeat)] text-white font-semibold px-6 py-2.5 rounded-full text-sm hover:bg-[var(--color-heartbeat-dark)] transition-colors"
+              >
+                Buy Kindle
+              </a>
+            </div>
+            <div className="border-2 border-[var(--color-heartbeat)] rounded-2xl px-8 py-6 text-center shadow-lg relative">
+              <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[var(--color-heartbeat)] text-white text-xs font-bold px-3 py-1 rounded-full">Most Popular</span>
+              <p className="text-sm text-gray-500 mb-1">Paperback</p>
+              <p className="text-3xl font-bold text-gray-900">$11.99</p>
+              <a
+                href="#"
+                className="mt-4 inline-block bg-[var(--color-heartbeat)] text-white font-semibold px-6 py-2.5 rounded-full text-sm hover:bg-[var(--color-heartbeat-dark)] transition-colors"
+              >
+                Buy Paperback
+              </a>
+            </div>
+            <div className="border border-gray-200 rounded-2xl px-8 py-6 text-center hover:border-[var(--color-heartbeat)] hover:shadow-lg transition-all">
+              <p className="text-sm text-gray-500 mb-1">Hardcover</p>
+              <p className="text-3xl font-bold text-gray-900">$17.49</p>
+              <a
+                href="#"
+                className="mt-4 inline-block bg-[var(--color-heartbeat)] text-white font-semibold px-6 py-2.5 rounded-full text-sm hover:bg-[var(--color-heartbeat-dark)] transition-colors"
+              >
+                Buy Hardcover
+              </a>
+            </div>
           </div>
           <p className="text-sm text-gray-400 mt-6">
             Need copies for your team?{" "}
