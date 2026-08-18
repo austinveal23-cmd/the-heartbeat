@@ -1,0 +1,18 @@
+plugins {
+  id 'com.android.library'
+  id 'expo-module-gradle-plugin'
+}
+
+group = 'expo.modules.posedetector'
+version = '1.0.0'
+
+android {
+  namespace "expo.modules.posedetector"
+}
+
+dependencies {
+  // Bundled ("fast") model — ships in the APK, no download step, good enough for
+  // loose "are they moving" detection. Swap for pose-detection-accurate if the
+  // fast model's jitter turns out to cause false negatives during real testing.
+  implementation "com.google.mlkit:pose-detection:18.0.0-beta5"
+}

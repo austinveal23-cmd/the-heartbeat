@@ -1,0 +1,10 @@
+{
+  "platforms": ["apple", "android"],
+  "apple": {
+    "modules": ["ExpoPoseDetectorModule"],
+    "podspecPath": ["ios/ExpoPoseDetector.podspec"]
+  },
+  "android": {
+    "modules": ["expo.modules.posedetector.ExpoPoseDetectorModule"]
+  }
+}

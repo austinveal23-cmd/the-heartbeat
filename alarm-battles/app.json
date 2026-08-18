@@ -1,0 +1,66 @@
+{
+  "expo": {
+    "name": "Alarm Battles",
+    "slug": "alarm-battles",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "scheme": "alarmbattles",
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.alarmbattles.app",
+      "googleServicesFile": "./GoogleService-Info.plist",
+      "infoPlist": {
+        "NSCameraUsageDescription": "Alarm Battles uses the camera to verify you're up and moving before it will silence your alarm.",
+        "UIBackgroundModes": ["audio", "remote-notification"]
+      },
+      "entitlements": {
+        "com.apple.developer.usernotifications.critical-alerts": true
+      }
+    },
+    "android": {
+      "package": "com.alarmbattles.app",
+      "googleServicesFile": "./google-services.json",
+      "adaptiveIcon": {
+        "backgroundColor": "#0B0B0F",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false,
+      "permissions": [
+        "CAMERA",
+        "SCHEDULE_EXACT_ALARM",
+        "USE_EXACT_ALARM",
+        "USE_FULL_SCREEN_INTENT",
+        "WAKE_LOCK",
+        "VIBRATE",
+        "POST_NOTIFICATIONS",
+        "FOREGROUND_SERVICE",
+        "FOREGROUND_SERVICE_MEDIA_PLAYBACK",
+        "RECEIVE_BOOT_COMPLETED"
+      ]
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-dev-client",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Alarm Battles uses the camera to verify you're up and moving before it will silence your alarm."
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "color": "#E11D2E"
+        }
+      ],
+      "@react-native-firebase/app",
+      "./plugins/withAndroidAlarmManifest.js"
+    ]
+  }
+}

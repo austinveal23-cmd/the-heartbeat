@@ -1,0 +1,55 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isSelf(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    // Fields only Cloud Functions (scoring.ts) may write.
+    function serverOwnedUserFields() {
+      return ['points', 'currentStreak', 'longestStreak', 'lastCompletedDate'];
+    }
+
+    match /users/{userId} {
+      allow read: if isSignedIn();
+      allow create: if isSelf(userId);
+      allow update: if isSelf(userId) &&
+        !request.resource.data.diff(resource.data).affectedKeys()
+          .hasAny(serverOwnedUserFields());
+      allow delete: if false;
+
+      match /alarms/{alarmId} {
+        allow read, write: if isSelf(userId);
+      }
+
+      match /friends/{friendId} {
+        allow read: if isSelf(userId);
+        allow create: if isSelf(userId) || isSelf(friendId);
+        allow update, delete: if isSelf(userId);
+      }
+    }
+
+    match /battles/{battleId} {
+      allow read: if isSignedIn() &&
+        request.auth.uid in resource.data.participantIds;
+      allow create: if isSignedIn() &&
+        request.auth.uid in request.resource.data.participantIds;
+      // Results/points/rank are only ever written by Cloud Functions
+      // (via the Admin SDK, which bypasses these rules).
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    match /workoutClips/{clipId} {
+      allow read: if isSignedIn();
+      allow create: if isSelf(request.resource.data.userId);
+      allow update, delete: if false;
+    }
+  }
+}
