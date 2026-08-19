@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useAlarmStore } from '../store/alarmStore';
 import { silenceRingingAlarm } from '../alarms/scheduleAlarm';
 import { usePoseTracking } from '../motion/usePoseTracking';
+import { isPoseDetectorAvailable } from 'expo-pose-detector';
 import { theme, numeralStyle } from '../theme/theme';
 import type { RootStackParamList } from '../navigation/types';
 
@@ -45,7 +46,8 @@ export function WorkoutCameraScreen({ route, navigation }: Props) {
     }
   }, [tracking.isMoving, tracking.lastMetric]);
 
-  const done = movingMs >= MOVING_MS_TO_COMPLETE || tracking.reps >= requiredReps;
+  const [manuallyCompleted, setManuallyCompleted] = useState(false);
+  const done = movingMs >= MOVING_MS_TO_COMPLETE || tracking.reps >= requiredReps || manuallyCompleted;
 
   useEffect(() => {
     if (!done || completing || !alarm) return;
@@ -89,12 +91,20 @@ export function WorkoutCameraScreen({ route, navigation }: Props) {
         </View>
 
         <Text style={styles.status}>
-          {!tracking.hasSeenPerson
-            ? 'Step into frame...'
-            : tracking.isMoving
-              ? "Keep going — that's it"
-              : 'Keep moving to silence the alarm'}
+          {!isPoseDetectorAvailable()
+            ? 'Motion detection unavailable in this build (see RUNNING.md)'
+            : !tracking.hasSeenPerson
+              ? 'Step into frame...'
+              : tracking.isMoving
+                ? "Keep going — that's it"
+                : 'Keep moving to silence the alarm'}
         </Text>
+
+        {!isPoseDetectorAvailable() && (
+          <Pressable style={styles.skipButton} onPress={() => setManuallyCompleted(true)}>
+            <Text style={styles.skipButtonText}>Skip (dev) — preview Workout Complete</Text>
+          </Pressable>
+        )}
       </View>
     </SafeAreaView>
   );
@@ -125,5 +135,15 @@ const styles = StyleSheet.create({
   },
   progressFill: { height: '100%', backgroundColor: theme.color.battle },
   status: { color: theme.color.textSecondary, marginTop: theme.space(3), fontSize: 14 },
+  skipButton: {
+    marginTop: theme.space(4),
+    paddingVertical: theme.space(3),
+    paddingHorizontal: theme.space(6),
+    borderRadius: theme.radius.pill,
+    backgroundColor: theme.color.surfaceRaised,
+    borderWidth: 1,
+    borderColor: theme.color.border,
+  },
+  skipButtonText: { color: theme.color.win, fontSize: 13, fontWeight: '700' },
   statusText: { color: theme.color.textPrimary, textAlign: 'center', padding: theme.space(6) },
 });

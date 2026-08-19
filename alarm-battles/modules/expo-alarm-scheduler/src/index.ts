@@ -1,5 +1,5 @@
 import { Platform } from 'react-native';
-import { requireNativeModule } from 'expo-modules-core';
+import { requireNativeModule, requireOptionalNativeModule } from 'expo-modules-core';
 
 export interface AlarmDescriptor {
   id: string;
@@ -15,6 +15,16 @@ interface NativeAlarmSchedulerModule {
   cancelAlarm(id: string): Promise<void>;
   stopRinging(id: string): Promise<void>;
   canScheduleExactAlarms(): Promise<boolean>;
+}
+
+/**
+ * True only on Android with the native module actually linked. Callers
+ * (src/store/alarmStore.ts, src/screens/AlarmRingingScreen.tsx) use this to
+ * decide whether to bother calling the scheduler at all, rather than relying
+ * on catching a thrown error every time.
+ */
+export function isAlarmSchedulerAvailable(): boolean {
+  return Platform.OS === 'android' && requireOptionalNativeModule('ExpoAlarmScheduler') !== null;
 }
 
 function getNativeModule(): NativeAlarmSchedulerModule {

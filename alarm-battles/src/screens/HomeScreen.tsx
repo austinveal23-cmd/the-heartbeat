@@ -1,7 +1,10 @@
+import { useCallback, useState } from 'react';
 import { FlatList, Pressable, StyleSheet, Switch, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useFocusEffect } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useAlarmStore, type Alarm } from '../store/alarmStore';
+import { nativeSchedulingIsWorking } from '../alarms/scheduleAlarm';
 import { theme, numeralStyle } from '../theme/theme';
 import type { RootStackParamList } from '../navigation/types';
 
@@ -24,7 +27,17 @@ function repeatSummary(repeatDays: number[]): string {
     .join(' ');
 }
 
-function AlarmCard({ alarm, onPress, onToggle }: { alarm: Alarm; onPress: () => void; onToggle: (v: boolean) => void }) {
+function AlarmCard({
+  alarm,
+  onPress,
+  onToggle,
+  onTestRing,
+}: {
+  alarm: Alarm;
+  onPress: () => void;
+  onToggle: (v: boolean) => void;
+  onTestRing: () => void;
+}) {
   return (
     <Pressable onPress={onPress} style={styles.card}>
       <View style={styles.cardLeft}>
@@ -36,12 +49,17 @@ function AlarmCard({ alarm, onPress, onToggle }: { alarm: Alarm; onPress: () => 
         </Text>
         {alarm.label ? <Text style={[styles.label, !alarm.active && styles.dimmed]}>{alarm.label}</Text> : null}
       </View>
-      <Switch
-        value={alarm.active}
-        onValueChange={onToggle}
-        trackColor={{ false: theme.color.border, true: theme.color.battle }}
-        thumbColor={theme.color.textPrimary}
-      />
+      <View style={styles.cardRight}>
+        <Switch
+          value={alarm.active}
+          onValueChange={onToggle}
+          trackColor={{ false: theme.color.border, true: theme.color.battle }}
+          thumbColor={theme.color.textPrimary}
+        />
+        <Pressable onPress={onTestRing} hitSlop={8} style={styles.testRingButton}>
+          <Text style={styles.testRingButtonText}>Test Ring ▸</Text>
+        </Pressable>
+      </View>
     </Pressable>
   );
 }
@@ -49,6 +67,16 @@ function AlarmCard({ alarm, onPress, onToggle }: { alarm: Alarm; onPress: () => 
 export function HomeScreen({ navigation }: Props) {
   const alarms = useAlarmStore((s) => s.alarms);
   const setActive = useAlarmStore((s) => s.setActive);
+  const [schedulerWorking, setSchedulerWorking] = useState(true);
+
+  // Re-check on focus (e.g. right after saving an alarm on AlarmCreate) —
+  // nativeSchedulingIsWorking() isn't itself reactive, it just reflects
+  // whether the last native scheduling call succeeded.
+  useFocusEffect(
+    useCallback(() => {
+      setSchedulerWorking(nativeSchedulingIsWorking());
+    }, [])
+  );
 
   return (
     <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
@@ -56,6 +84,15 @@ export function HomeScreen({ navigation }: Props) {
         <Text style={styles.title}>ALARM BATTLES</Text>
         <Text style={styles.subtitle}>Get up. Move. Win.</Text>
       </View>
+
+      {!schedulerWorking && (
+        <View style={styles.warningBanner}>
+          <Text style={styles.warningBannerText}>
+            Alarms are saved but won't actually ring — native scheduling isn't linked in this build. Use
+            "Test Ring" to preview the flow, or build a full dev client (see RUNNING.md).
+          </Text>
+        </View>
+      )}
 
       <FlatList
         data={alarms}
@@ -71,6 +108,7 @@ export function HomeScreen({ navigation }: Props) {
             alarm={item}
             onPress={() => navigation.navigate('AlarmCreate', { alarmId: item.id })}
             onToggle={(v) => setActive(item.id, v)}
+            onTestRing={() => navigation.navigate('AlarmRinging', { alarmId: item.id })}
           />
         )}
       />
@@ -99,6 +137,19 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   cardLeft: { flex: 1, marginRight: theme.space(3) },
+  cardRight: { alignItems: 'flex-end', gap: theme.space(2) },
+  testRingButton: { paddingVertical: theme.space(1), paddingHorizontal: theme.space(1) },
+  testRingButtonText: { color: theme.color.win, fontSize: 12, fontWeight: '700' },
+  warningBanner: {
+    marginHorizontal: theme.space(6),
+    marginBottom: theme.space(2),
+    padding: theme.space(3),
+    borderRadius: theme.radius.sm,
+    backgroundColor: theme.color.battleDim,
+    borderWidth: 1,
+    borderColor: theme.color.battle,
+  },
+  warningBannerText: { color: theme.color.textPrimary, fontSize: 12, lineHeight: 17 },
   time: { color: theme.color.textPrimary, fontSize: 32 },
   meta: { color: theme.color.textSecondary, fontSize: 13, marginTop: theme.space(1), textTransform: 'capitalize' },
   label: { color: theme.color.textMuted, fontSize: 12, marginTop: theme.space(1) },
