@@ -25,13 +25,38 @@ npx expo run:android     # needs Android Studio + an emulator or device
 ```
 
 ### iOS (needs a Mac)
+
+Simplest path — let Expo drive it:
 ```
-npx expo run:ios         # needs Xcode + a simulator or device
-cd ios && pod install && cd ..   # if run:ios doesn't do this for you
+npx expo run:ios         # needs Xcode + a simulator or device, runs pod install for you
 ```
+
+**Opening it directly in Xcode instead:** after `npx expo prebuild`, run
+`cd ios && pod install`, then open **`ios/AlarmBattles.xcworkspace`** —
+not `AlarmBattles.xcodeproj`. Opening the `.xcodeproj` skips CocoaPods
+entirely and the build will fail to find the native module headers.
 
 Both of these do a real native build the first time (several minutes),
 not just a JS bundle — that's expected.
+
+**Signing, if building to a physical device or you hit a provisioning
+error:** open the `AlarmBattles` target → Signing & Capabilities → pick
+your own Apple ID as the team. With a free/personal Apple ID this works
+fine for local testing but the build expires after 7 days. If Xcode
+complains the bundle identifier (`com.alarmbattles.app`, set in
+`app.json`) isn't available, change it to something like
+`com.<yourname>.alarmbattles` and re-run `expo prebuild`.
+
+**iOS is the less-verified half of this project.** The native alarm
+scheduler (`expo-alarm-scheduler`) is Android-only by design — iOS uses
+a notification-burst fallback instead (`src/alarms/iosAlarmFallback.ts`),
+so there's no native alarm code to fail on iOS. But
+`modules/expo-pose-detector/ios/ExpoPoseDetectorModule.swift` (the ML Kit
+camera pose detection) was written against the documented ML Kit iOS API
+without ever compiling it — no Mac was available while building this. If
+the build fails specifically in that file or in the `GoogleMLKit/PoseDetection`
+pod, that's the most likely place, not a sign anything else is broken.
+See `src/motion/README.md` for specifics.
 
 ### Firebase
 `google-services.json` and `GoogleService-Info.plist` at the repo root are

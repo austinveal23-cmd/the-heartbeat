@@ -14,9 +14,6 @@
       "infoPlist": {
         "NSCameraUsageDescription": "Alarm Battles uses the camera to verify you're up and moving before it will silence your alarm.",
         "UIBackgroundModes": ["audio", "remote-notification"]
-      },
-      "entitlements": {
-        "com.apple.developer.usernotifications.critical-alerts": true
       }
     },
     "android": {
