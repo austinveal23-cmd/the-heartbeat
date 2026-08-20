@@ -6,10 +6,18 @@ import * as Notifications from 'expo-notifications';
 import { RootNavigator } from './src/navigation/RootNavigator';
 import { navigationRef } from './src/navigation/navigationRef';
 import { configureNotificationHandler } from './src/notifications/setup';
+import { useAuthStore } from './src/store/authStore';
 
 configureNotificationHandler();
 
 export default function App() {
+  useEffect(() => {
+    // Restores the existing Firebase session (if any) on launch — see
+    // RootNavigator, which waits on authStore.status before picking an
+    // initial route.
+    useAuthStore.getState().initAuthListener();
+  }, []);
+
   useEffect(() => {
     // Android's ringing UI arrives via the alarmbattles:// deep link
     // (expo-alarm-scheduler's full-screen intent). iOS's burst-scheduled

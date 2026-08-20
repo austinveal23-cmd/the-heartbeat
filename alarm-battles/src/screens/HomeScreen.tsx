@@ -81,8 +81,18 @@ export function HomeScreen({ navigation }: Props) {
   return (
     <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
       <View style={styles.header}>
-        <Text style={styles.title}>ALARM BATTLES</Text>
-        <Text style={styles.subtitle}>Get up. Move. Win.</Text>
+        <View style={styles.headerText}>
+          <Text style={styles.title}>ALARM BATTLES</Text>
+          <Text style={styles.subtitle}>Get up. Move. Win.</Text>
+        </View>
+        <Pressable
+          onPress={() => navigation.navigate('Profile')}
+          hitSlop={8}
+          style={styles.profileButton}
+          accessibilityLabel="Profile"
+        >
+          <Text style={styles.profileButtonText}>Profile</Text>
+        </Pressable>
       </View>
 
       {!schedulerWorking && (
@@ -122,9 +132,26 @@ export function HomeScreen({ navigation }: Props) {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: theme.color.background },
-  header: { paddingHorizontal: theme.space(6), paddingTop: theme.space(4), paddingBottom: theme.space(2) },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
+    paddingHorizontal: theme.space(6),
+    paddingTop: theme.space(4),
+    paddingBottom: theme.space(2),
+  },
+  headerText: { flex: 1 },
   title: { color: theme.color.textPrimary, fontSize: 24, fontWeight: '800', letterSpacing: 1 },
   subtitle: { color: theme.color.textSecondary, marginTop: theme.space(1), fontSize: 14 },
+  profileButton: {
+    paddingVertical: theme.space(2),
+    paddingHorizontal: theme.space(3),
+    borderRadius: theme.radius.pill,
+    borderWidth: 1,
+    borderColor: theme.color.border,
+    backgroundColor: theme.color.surface,
+  },
+  profileButtonText: { color: theme.color.textPrimary, fontSize: 12, fontWeight: '700' },
   listContent: { paddingHorizontal: theme.space(4), paddingBottom: theme.space(24), gap: theme.space(3) },
   card: {
     backgroundColor: theme.color.surface,

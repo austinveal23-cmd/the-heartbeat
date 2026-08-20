@@ -17,6 +17,7 @@ import type { ExerciseType } from '../types/exercise';
 export interface UserDoc {
   uid: string;
   displayName: string;
+  email: string;
   photoURL: string | null;
   points: number;
   currentStreak: number;

@@ -28,10 +28,18 @@ service cloud.firestore {
         allow read, write: if isSelf(userId);
       }
 
+      // Friend requests/friendships are a single doc mirrored on both sides
+      // (users/A/friends/B and users/B/friends/A) — see src/firebase/schema.ts.
+      // Sending a request writes both mirrors from the sender's client, so
+      // create must allow either party. Accepting flips both mirrors to
+      // 'accepted' too, so update needs the same — otherwise only the
+      // accepting side's copy would ever change and the two would disagree
+      // about the friendship's status forever.
       match /friends/{friendId} {
         allow read: if isSelf(userId);
         allow create: if isSelf(userId) || isSelf(friendId);
-        allow update, delete: if isSelf(userId);
+        allow update: if isSelf(userId) || isSelf(friendId);
+        allow delete: if isSelf(userId);
       }
     }
 
